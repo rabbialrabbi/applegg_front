@@ -1,180 +1,75 @@
-<script>
-import { CirclePlusIcon } from 'vue-tabler-icons';
-const desserts = [
+<script setup>
+import { CirclePlusIcon,EditIcon,TrashIcon } from 'vue-tabler-icons';
+import ProductForm from "@/components/product/ProductForm.vue";
+import confirmation from "@/_helper/alert";
+import {usePosStore} from "@/stores/pos";
+
+let pos = usePosStore()
+let loading = ref(true)
+let name = ref('')
+let search = ref('')
+let productFromStatus = ref(false)
+let page = reactive({ title: 'Product List' })
+let itemsPerPage = ref(10)
+let product = ref(null)
+const breadcrumbs= [
   {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    iron: '1',
+    title: 'Product',
+    disabled: false,
+    href: '#'
   },
   {
-    name: 'Jelly bean',
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    iron: '0',
-  },
-  {
-    name: 'KitKat',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    iron: '6',
-  },
-  {
-    name: 'Eclair',
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    iron: '7',
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    iron: '16',
-  },
-  {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    iron: '1',
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    iron: '2',
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    iron: '8',
-  },
-  {
-    name: 'Honeycomb',
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    iron: '45',
-  },
-  {
-    name: 'Donut',
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    iron: '22',
-  },
+    title: 'List',
+    disabled: true,
+    href: '#'
+  }
 ]
 
-const FakeAPI = {
-  async fetch ({ page, itemsPerPage, sortBy, search }) {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        const start = (page - 1) * itemsPerPage
-        const end = start + itemsPerPage
-        const items = desserts.slice().filter(item => {
-          if (search.name && !item.name.toLowerCase().includes(search.name.toLowerCase())) {
-            return false
-          }
+const headers = [
+    {
+      title: 'Name',
+      align: 'start',
+      sortable: false,
+      key: 'name',
+    },
+    { title: 'SKU', key: 'SKU', align: 'end' },
+    { title: 'Category', key: 'category', align: 'end' },
+    { title: 'Price', key: 'price', align: 'end' },
+    { title: 'Current Stock', key: 'current_stock_quantity', align: 'end' },
+    { title: 'Action', key: 'actions', align: 'center', sortable: false },
+  ]
 
-          // eslint-disable-next-line sonarjs/prefer-single-boolean-return
-          if (search.calories && !(item.calories >= Number(search.calories))) {
-            return false
-          }
 
-          return true
-        })
+watch(name,(newData)=>{
+  search.value = String(Date.now())
+})
 
-        if (sortBy.length) {
-          const sortKey = sortBy[0].key
-          const sortOrder = sortBy[0].order
-          items.sort((a, b) => {
-            const aValue = a[sortKey]
-            const bValue = b[sortKey]
-            return sortOrder === 'desc' ? bValue - aValue : aValue - bValue
-          })
-        }
-
-        const paginated = items.slice(start, end)
-
-        resolve({ items: paginated, total: items.length })
-      }, 500)
-    })
-  },
+onMounted(()=> pos.getCategoryList())
+const loadItems = async ({ page, itemsPerPage, sortBy }) =>{
+  loading.value = true
+  let config = {
+    params:{
+      page,
+      itemsPerPage,
+      sortBy,
+      q: name.value
+    }
+  }
+  await pos.getProductList(config)
+  loading.value = false
 }
 
-export default {
-  data: () => ({
-    dialog: false,
-    breadcrumbs: [
-      {
-        title: 'Product',
-        disabled: false,
-        href: '#'
-      },
-      {
-        title: 'List',
-        disabled: true,
-        href: '#'
-      }
-    ],
-    page: { title: 'Product List' } ,
-    itemsPerPage: 5,
-    headers: [
-      {
-        title: 'Dessert (100g serving)',
-        align: 'start',
-        sortable: false,
-        key: 'name',
-      },
-      { title: 'Calories', key: 'calories', align: 'end' },
-      { title: 'Fat (g)', key: 'fat', align: 'end' },
-      { title: 'Carbs (g)', key: 'carbs', align: 'end' },
-      { title: 'Protein (g)', key: 'protein', align: 'end' },
-      { title: 'Iron (%)', key: 'iron', align: 'end' },
-    ],
-    serverItems: [],
-    loading: true,
-    totalItems: 0,
-    name: '',
-    calories: '',
-    search: '',
-  }),
-  watch: {
-    name () {
-      this.search = String(Date.now())
-    },
-    calories () {
-      this.search = String(Date.now())
-    },
-  },
-  methods: {
-    loadItems ({ page, itemsPerPage, sortBy }) {
-      this.loading = true
-      FakeAPI.fetch({ page, itemsPerPage, sortBy, search: { name: this.name, calories: this.calories } }).then(({ items, total }) => {
-        this.serverItems = items
-        this.totalItems = total
-        this.loading = false
-      })
-    },
-  },
+const editProduct = (productId)=>{
+  product.value = pos.products.find(x => x.product_id === productId)
+  productFromStatus.value = true
+}
+
+const deleteProduct = async (productId)=>{
+  let alert =  confirmation.delete()
+  alert.then(res=>{
+    if(res.isConfirmed)
+      pos.deleteProduct(productId)
+  })
 }
 </script>
 
@@ -188,7 +83,7 @@ export default {
         <template v-slot:title>
           Product List
           <CirclePlusIcon
-            @click="dialog=true"
+            @click="product=null;productFromStatus=true"
           />
         </template>
 
@@ -211,35 +106,50 @@ export default {
           <v-data-table-server
             v-model:items-per-page="itemsPerPage"
             :headers="headers"
-            :items="serverItems"
-            :items-length="totalItems"
+            :items="pos.products"
+            :items-length="pos.totalProductItem"
             :loading="loading"
             :search="search"
             item-value="name"
             @update:options="loadItems"
           >
+            <!-- Actions -->
+            <template #item.actions="{ item }">
+              <div class="text-no-wrap">
+                <IconBtn
+                  class="actionBtn"
+                  size="small"
+                  @click="editProduct(item.product_id)"
+                >
+                  <EditIcon/>
+                </IconBtn>
+
+                <IconBtn
+                  class="actionBtn"
+                  size="small"
+                  @click="deleteProduct(item.product_id)"
+                >
+                  <TrashIcon/>
+                </IconBtn>
+
+              </div>
+            </template>
           </v-data-table-server>
         </v-card-text>
       </v-card>
     </v-col>
   </v-row>
-  <v-dialog
-    v-model="dialog"
-    max-width="500px"
-  >
-    <v-card
-      max-width="400"
-      prepend-icon="mdi-update"
-      text="Your application will relaunch automatically after the update is complete."
-      title="Update in progress"
-    >
-      <template v-slot:actions>
-        <v-btn
-          class="ms-auto"
-          text="Ok"
-          @click="dialog = false"
-        ></v-btn>
-      </template>
-    </v-card>
+  <v-dialog v-model="productFromStatus" max-width="600px">
+    <ProductForm
+      :product="product"
+      @close-product-form="productFromStatus=false"
+    ></ProductForm>
   </v-dialog>
+
 </template>
+
+<style>
+.actionBtn{
+  cursor: pointer;
+}
+</style>

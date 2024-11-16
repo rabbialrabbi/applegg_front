@@ -10,6 +10,8 @@ import pinia from '@/stores'
 import router from '@/router'
 import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
 import VueTablerIcons from 'vue-tabler-icons';
+import VueSweetalert2 from 'vue-sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
 
 export function registerPlugins (app) {
   app
@@ -18,4 +20,5 @@ export function registerPlugins (app) {
     .use(pinia)
     .use(PerfectScrollbarPlugin)
     .use(VueTablerIcons)
+    .use(VueSweetalert2)
 }
