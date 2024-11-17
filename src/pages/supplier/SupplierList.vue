@@ -1,19 +1,19 @@
 <script setup>
 import { CirclePlusIcon,EditIcon,TrashIcon } from 'vue-tabler-icons';
-import ProductForm from "@/components/product/ProductForm.vue";
+import SupplierForm from "@/components/supplier/SupplierForm.vue";
 import confirmation from "@/_helper/alert";
-import {useProductStore} from "@/stores/product";
+import {useSupplierStore} from "@/stores/supplier";
 
-let productStore = useProductStore()
+let supplierStore = useSupplierStore()
 let loading = ref(true)
 let name = ref('')
 let search = ref('')
-let page = reactive({ title: 'Product List' })
+let page = reactive({ title: 'Supplier List' })
 let itemsPerPage = ref(10)
-let product = ref(null)
+let supplier = ref(null)
 const breadcrumbs= [
   {
-    title: 'Product',
+    title: 'Supplier',
     disabled: false,
     href: '#'
   },
@@ -30,11 +30,22 @@ const headers = [
       align: 'start',
       key: 'name',
     },
-    { title: 'SKU', key: 'SKU', align: 'end' },
-    { title: 'Category', key: 'category', align: 'end' },
-    { title: 'Price', key: 'price', align: 'end' },
-    { title: 'Current Stock', key: 'current_stock_quantity', align: 'end' },
-    { title: 'Action', key: 'actions', align: 'center', sortable: false },
+    {
+      title: 'Email',
+      align: 'start',
+      key: 'email',
+    },
+    {
+      title: 'Phone',
+      align: 'start',
+      key: 'phone',
+    },
+   {
+      title: 'Address',
+      align: 'start',
+      key: 'address',
+    },
+   { title: 'Action', key: 'actions', align: 'center', sortable: false },
   ]
 
 
@@ -42,7 +53,6 @@ watch(name,(newData)=>{
   search.value = String(Date.now())
 })
 
-onMounted(()=> productStore.getCategoryList())
 const loadItems = async ({ page, itemsPerPage, sortBy }) =>{
   loading.value = true
   let config = {
@@ -53,20 +63,20 @@ const loadItems = async ({ page, itemsPerPage, sortBy }) =>{
       q: name.value
     }
   }
-  await productStore.getProductList(config)
+  await supplierStore.getSupplierList(config)
   loading.value = false
 }
 
-const editProduct = (productId)=>{
-  product.value = productStore.products.find(x => x.product_id === productId)
-  productStore.productFormStatus = true
+const editSupplier = (supplierId)=>{
+  supplier.value = supplierStore.suppliers.find(x => x.supplier_id === supplierId)
+  supplierStore.supplierFormStatus = true
 }
 
-const deleteProduct = async (productId)=>{
+const deleteSupplier = async (supplierId)=>{
   let alert =  confirmation.delete()
   alert.then(res=>{
     if(res.isConfirmed)
-      productStore.deleteProduct(productId)
+      supplierStore.deleteSupplier(supplierId)
   })
 }
 </script>
@@ -79,9 +89,9 @@ const deleteProduct = async (productId)=>{
         class="mx-auto"
       >
         <template v-slot:title>
-          Product List
+          Supplier List
           <CirclePlusIcon
-            @click="product=null;productStore.productFormStatus=true"
+            @click="supplier=null;supplierStore.supplierFormStatus=true"
           />
         </template>
 
@@ -104,8 +114,8 @@ const deleteProduct = async (productId)=>{
           <v-data-table-server
             v-model:items-per-page="itemsPerPage"
             :headers="headers"
-            :items="productStore.products"
-            :items-length="productStore.totalProductItem"
+            :items="supplierStore.suppliers"
+            :items-length="supplierStore.totalSupplierItem"
             :loading="loading"
             :search="search"
             item-value="name"
@@ -117,7 +127,7 @@ const deleteProduct = async (productId)=>{
                 <IconBtn
                   class="actionBtn"
                   size="small"
-                  @click="editProduct(item.product_id)"
+                  @click="editSupplier(item.supplier_id)"
                 >
                   <EditIcon/>
                 </IconBtn>
@@ -125,7 +135,7 @@ const deleteProduct = async (productId)=>{
                 <IconBtn
                   class="actionBtn"
                   size="small"
-                  @click="deleteProduct(item.product_id)"
+                  @click="deleteSupplier(item.supplier_id)"
                 >
                   <TrashIcon/>
                 </IconBtn>
@@ -137,10 +147,10 @@ const deleteProduct = async (productId)=>{
       </v-card>
     </v-col>
   </v-row>
-  <v-dialog v-model="productStore.productFormStatus" max-width="600px">
-    <ProductForm
-      :product="product"
-    ></ProductForm>
+  <v-dialog v-model="supplierStore.supplierFormStatus" max-width="600px">
+    <SupplierForm
+      :supplier="supplier"
+    ></SupplierForm>
   </v-dialog>
 
 </template>

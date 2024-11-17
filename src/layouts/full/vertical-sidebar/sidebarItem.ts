@@ -39,6 +39,27 @@ const sidebarItem: menu[] = [
     icon: DashboardIcon,
     to: '/product/list'
   },
+  {
+    title: 'Suppler',
+    icon: DashboardIcon,
+    to: '/supplier/list'
+  },
+  {
+    title: 'Purchase',
+    icon: KeyIcon,
+    children: [
+      {
+        title: 'Purchase List',
+        icon: CircleIcon,
+        to: '/purchase/list'
+      },
+      {
+        title: 'Purchase',
+        icon: CircleIcon,
+        to: '/purchase/create'
+      }
+    ]
+  },
   { divider: true },
   { header: 'Pages' },
   {

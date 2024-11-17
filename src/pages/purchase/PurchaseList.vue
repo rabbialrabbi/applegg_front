@@ -1,19 +1,17 @@
 <script setup>
-import { CirclePlusIcon,EditIcon,TrashIcon } from 'vue-tabler-icons';
-import ProductForm from "@/components/product/ProductForm.vue";
+import {TrashIcon } from 'vue-tabler-icons';
 import confirmation from "@/_helper/alert";
-import {useProductStore} from "@/stores/product";
+import {usePurchaseStore} from "@/stores/purchase";
 
-let productStore = useProductStore()
+let purchaseStore = usePurchaseStore()
 let loading = ref(true)
 let name = ref('')
 let search = ref('')
-let page = reactive({ title: 'Product List' })
+let page = reactive({ title: 'Purchase List' })
 let itemsPerPage = ref(10)
-let product = ref(null)
 const breadcrumbs= [
   {
-    title: 'Product',
+    title: 'Purchase',
     disabled: false,
     href: '#'
   },
@@ -26,15 +24,15 @@ const breadcrumbs= [
 
 const headers = [
     {
-      title: 'Name',
+      title: 'Purchase ID',
       align: 'start',
-      key: 'name',
+      key: 'purchase_id',
     },
-    { title: 'SKU', key: 'SKU', align: 'end' },
-    { title: 'Category', key: 'category', align: 'end' },
-    { title: 'Price', key: 'price', align: 'end' },
-    { title: 'Current Stock', key: 'current_stock_quantity', align: 'end' },
+    { title: 'Supplier', key: 'supplier', align: 'start' },
+    { title: 'Total Amount', key: 'total_amount', align: 'end' },
+    { title: 'Purchase At', key: 'purchase_date', align: 'end' },
     { title: 'Action', key: 'actions', align: 'center', sortable: false },
+
   ]
 
 
@@ -42,7 +40,6 @@ watch(name,(newData)=>{
   search.value = String(Date.now())
 })
 
-onMounted(()=> productStore.getCategoryList())
 const loadItems = async ({ page, itemsPerPage, sortBy }) =>{
   loading.value = true
   let config = {
@@ -53,20 +50,15 @@ const loadItems = async ({ page, itemsPerPage, sortBy }) =>{
       q: name.value
     }
   }
-  await productStore.getProductList(config)
+  await purchaseStore.getPurchaseList(config)
   loading.value = false
 }
 
-const editProduct = (productId)=>{
-  product.value = productStore.products.find(x => x.product_id === productId)
-  productStore.productFormStatus = true
-}
-
-const deleteProduct = async (productId)=>{
+const deletePurchase = async (purchaseId)=>{
   let alert =  confirmation.delete()
   alert.then(res=>{
     if(res.isConfirmed)
-      productStore.deleteProduct(productId)
+      purchaseStore.deletePurchase(purchaseId)
   })
 }
 </script>
@@ -79,10 +71,7 @@ const deleteProduct = async (productId)=>{
         class="mx-auto"
       >
         <template v-slot:title>
-          Product List
-          <CirclePlusIcon
-            @click="product=null;productStore.productFormStatus=true"
-          />
+          Purchase List
         </template>
 
         <v-card-text class="pt-4">
@@ -104,32 +93,28 @@ const deleteProduct = async (productId)=>{
           <v-data-table-server
             v-model:items-per-page="itemsPerPage"
             :headers="headers"
-            :items="productStore.products"
-            :items-length="productStore.totalProductItem"
+            :items="purchaseStore.purchases"
+            :items-length="purchaseStore.totalPurchaseItem"
             :loading="loading"
             :search="search"
             item-value="name"
             @update:options="loadItems"
           >
+            <template #item.purchase_id="{ item }">
+              <RouterLink :to="'/purchase/' + item.purchase_id ">
+                #{{ item.purchase_id }}
+              </RouterLink>
+            </template>
             <!-- Actions -->
             <template #item.actions="{ item }">
               <div class="text-no-wrap">
                 <IconBtn
                   class="actionBtn"
                   size="small"
-                  @click="editProduct(item.product_id)"
-                >
-                  <EditIcon/>
-                </IconBtn>
-
-                <IconBtn
-                  class="actionBtn"
-                  size="small"
-                  @click="deleteProduct(item.product_id)"
+                  @click="deletePurchase(item.purchase_id)"
                 >
                   <TrashIcon/>
                 </IconBtn>
-
               </div>
             </template>
           </v-data-table-server>
@@ -137,11 +122,6 @@ const deleteProduct = async (productId)=>{
       </v-card>
     </v-col>
   </v-row>
-  <v-dialog v-model="productStore.productFormStatus" max-width="600px">
-    <ProductForm
-      :product="product"
-    ></ProductForm>
-  </v-dialog>
 
 </template>
 

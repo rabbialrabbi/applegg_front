@@ -22,6 +22,26 @@ const MainRoutes = {
       component: () => import('@/pages/product/ProductList.vue')
     },
     {
+      name: 'Supplier List',
+      path: '/supplier/list',
+      component: () => import('@/pages/supplier/SupplierList.vue')
+    },
+    {
+      name: 'Purchase List',
+      path: '/purchase/list',
+      component: () => import('@/pages/purchase/PurchaseList.vue')
+    },
+    {
+      name: 'Purchase Item',
+      path: '/purchase/:id',
+      component: () => import('@/pages/purchase/PurchaseItem.vue')
+    },
+    {
+      name: 'Purchase Item',
+      path: '/purchase/create',
+      component: () => import('@/pages/purchase/PurchaseCreate.vue')
+    },
+    {
       name: 'Starter',
       path: '/starter',
       component: () => import('@/views/StarterPage.vue')

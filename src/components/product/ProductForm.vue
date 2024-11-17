@@ -44,9 +44,6 @@ const saveProduct = () => {
 
 };
 
-const close = () => {
-  emit('closeProductForm');
-};
 </script>
 <template>
 
