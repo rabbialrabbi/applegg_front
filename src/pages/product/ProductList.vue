@@ -2,13 +2,12 @@
 import { CirclePlusIcon,EditIcon,TrashIcon } from 'vue-tabler-icons';
 import ProductForm from "@/components/product/ProductForm.vue";
 import confirmation from "@/_helper/alert";
-import {usePosStore} from "@/stores/pos";
+import {useProductStore} from "@/stores/product";
 
-let pos = usePosStore()
+let productStore = useProductStore()
 let loading = ref(true)
 let name = ref('')
 let search = ref('')
-let productFromStatus = ref(false)
 let page = reactive({ title: 'Product List' })
 let itemsPerPage = ref(10)
 let product = ref(null)
@@ -44,7 +43,7 @@ watch(name,(newData)=>{
   search.value = String(Date.now())
 })
 
-onMounted(()=> pos.getCategoryList())
+onMounted(()=> productStore.getCategoryList())
 const loadItems = async ({ page, itemsPerPage, sortBy }) =>{
   loading.value = true
   let config = {
@@ -55,20 +54,20 @@ const loadItems = async ({ page, itemsPerPage, sortBy }) =>{
       q: name.value
     }
   }
-  await pos.getProductList(config)
+  await productStore.getProductList(config)
   loading.value = false
 }
 
 const editProduct = (productId)=>{
-  product.value = pos.products.find(x => x.product_id === productId)
-  productFromStatus.value = true
+  product.value = productStore.products.find(x => x.product_id === productId)
+  productStore.productFormStatus = true
 }
 
 const deleteProduct = async (productId)=>{
   let alert =  confirmation.delete()
   alert.then(res=>{
     if(res.isConfirmed)
-      pos.deleteProduct(productId)
+      productStore.deleteProduct(productId)
   })
 }
 </script>
@@ -83,7 +82,7 @@ const deleteProduct = async (productId)=>{
         <template v-slot:title>
           Product List
           <CirclePlusIcon
-            @click="product=null;productFromStatus=true"
+            @click="product=null;productStore.productFormStatus=true"
           />
         </template>
 
@@ -106,8 +105,8 @@ const deleteProduct = async (productId)=>{
           <v-data-table-server
             v-model:items-per-page="itemsPerPage"
             :headers="headers"
-            :items="pos.products"
-            :items-length="pos.totalProductItem"
+            :items="productStore.products"
+            :items-length="productStore.totalProductItem"
             :loading="loading"
             :search="search"
             item-value="name"
@@ -139,10 +138,9 @@ const deleteProduct = async (productId)=>{
       </v-card>
     </v-col>
   </v-row>
-  <v-dialog v-model="productFromStatus" max-width="600px">
+  <v-dialog v-model="productStore.productFormStatus" max-width="600px">
     <ProductForm
       :product="product"
-      @close-product-form="productFromStatus=false"
     ></ProductForm>
   </v-dialog>
 
