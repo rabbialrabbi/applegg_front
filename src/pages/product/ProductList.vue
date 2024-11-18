@@ -3,6 +3,7 @@ import { CirclePlusIcon,EditIcon,TrashIcon } from 'vue-tabler-icons';
 import ProductForm from "@/components/product/ProductForm.vue";
 import confirmation from "@/_helper/alert";
 import {useProductStore} from "@/stores/product";
+import {formatCurrency} from '@/utils/helpers'
 
 let productStore = useProductStore()
 let loading = ref(true)
@@ -79,10 +80,15 @@ const deleteProduct = async (productId)=>{
         class="mx-auto"
       >
         <template v-slot:title>
-          Product List
-          <CirclePlusIcon
+          <v-btn
+            class="mt-4"
+            color="success"
+            prepend-icon="mdi-plus"
+            text="Create"
+            variant="flat"
+            flat
             @click="product=null;productStore.productFormStatus=true"
-          />
+          ></v-btn>
         </template>
 
         <v-card-text class="pt-4">
@@ -112,26 +118,29 @@ const deleteProduct = async (productId)=>{
             @update:options="loadItems"
           >
             <!-- Actions -->
-            <template #item.actions="{ item }">
-              <div class="text-no-wrap">
-                <IconBtn
-                  class="actionBtn"
-                  size="small"
-                  @click="editProduct(item.product_id)"
-                >
-                  <EditIcon/>
-                </IconBtn>
-
-                <IconBtn
-                  class="actionBtn"
-                  size="small"
-                  @click="deleteProduct(item.product_id)"
-                >
-                  <TrashIcon/>
-                </IconBtn>
-
-              </div>
+            <template #item.price="{ item }">
+              {{formatCurrency(item.price)}}
             </template>
+            <template #item.actions="{ item }">
+                <div class="text-no-wrap">
+                  <IconBtn
+                    class="actionBtn"
+                    size="small"
+                    @click="editProduct(item.product_id)"
+                  >
+                    <EditIcon/>
+                  </IconBtn>
+
+                  <IconBtn
+                    class="actionBtn"
+                    size="small"
+                    @click="deleteProduct(item.product_id)"
+                  >
+                    <TrashIcon/>
+                  </IconBtn>
+
+                </div>
+              </template>
           </v-data-table-server>
         </v-card-text>
       </v-card>

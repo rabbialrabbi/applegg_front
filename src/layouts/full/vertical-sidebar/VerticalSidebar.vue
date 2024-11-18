@@ -2,11 +2,11 @@
 import { shallowRef } from 'vue';
 import { useCustomizerStore } from '../../../stores/customizer';
 import sidebarItems from './sidebarItem';
-
+import { RouterLink } from 'vue-router';
 import NavGroup from './NavGroup/NavGroup.vue';
 import NavItem from './NavItem/NavItem.vue';
 import NavCollapse from './NavCollapse/NavCollapse.vue';
-import Logo from '../logo/LogoMain.vue';
+
 
 const customizer = useCustomizerStore();
 const sidebarMenu = shallowRef(sidebarItems);
@@ -27,7 +27,19 @@ const sidebarMenu = shallowRef(sidebarItems);
     <!---Logo part -->
 
     <div class="pa-5">
-      <Logo />
+      <RouterLink to="/">
+        <v-menu :close-on-content-click="false">
+          <template v-slot:activator="{ props }">
+            <v-btn class="profileBtn text-primary" color="lightprimary" variant="flat" rounded="pill" v-bind="props">
+              <v-avatar size="30" class="mr-2 py-2">
+                <img src="@/assets/images/logos/super_pos.svg" width="40px" height="40px" alt="Julia" />
+              </v-avatar>
+              <h3>Super POS</h3>
+            </v-btn>
+          </template>
+        </v-menu>
+      </RouterLink>
+
     </div>
     <!-- ---------------------------------------------- -->
     <!---Navigation -->

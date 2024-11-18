@@ -2,13 +2,15 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router'
 import {usePurchaseStore} from "@/stores/purchase";
+import {formatCurrency} from '@/utils/helpers'
+
 const route = useRoute()
 const purchaseStore = usePurchaseStore()
 const purchaseId = ref(route.params.id)
 const purchase = ref()
 
 onMounted(async ()=>{
-  await purchaseStore.getPurchaseList()
+  // await purchaseStore.getPurchaseList()
   purchase.value = purchaseStore.purchases.find(x=>x.purchase_id == purchaseId.value)
 });
 
@@ -30,16 +32,6 @@ const breadcrumbs= [
     href: '#'
   }
 ]
-
-
-
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(value);
-};
-
 
 
 
@@ -82,8 +74,8 @@ const formatCurrency = (value) => {
                 <tr v-for="item in purchase.purchase_items" :key="item.purchase_item_id">
                   <td>{{item.product_name}}</td>
                   <td>{{item.quantity}}</td>
-                  <td>{{item.unit_price}}</td>
-                  <td class="text-right">{{item.total_price}}</td>
+                  <td>{{formatCurrency(item.unit_price)}}</td>
+                  <td class="text-right">{{formatCurrency(item.total_price)}}</td>
                 </tr>
                 <tr>
                   <td class="text-right" colspan="3">Sub Total</td>

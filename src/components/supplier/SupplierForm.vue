@@ -28,7 +28,10 @@ watch(
   {immediate: true}
 );
 /* Reset errors if any*/
-onMounted(()=> refForm.value?.resetValidation())
+onMounted(()=> {
+  supplierStore.errors = {}
+  refForm.value?.resetValidation()
+})
 const saveSupplier = () => {
   let status = refForm.value?.validate()
   status.then(x => {

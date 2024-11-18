@@ -89,10 +89,15 @@ const deleteSupplier = async (supplierId)=>{
         class="mx-auto"
       >
         <template v-slot:title>
-          Supplier List
-          <CirclePlusIcon
+          <v-btn
+            class="mt-4"
+            color="success"
+            prepend-icon="mdi-plus"
+            text="Create"
+            variant="flat"
+            flat
             @click="supplier=null;supplierStore.supplierFormStatus=true"
-          />
+          ></v-btn>
         </template>
 
         <v-card-text class="pt-4">

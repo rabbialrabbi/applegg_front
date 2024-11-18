@@ -2,6 +2,7 @@
 import {TrashIcon } from 'vue-tabler-icons';
 import confirmation from "@/_helper/alert";
 import {usePurchaseStore} from "@/stores/purchase";
+import {formatCurrency} from '@/utils/helpers'
 
 let purchaseStore = usePurchaseStore()
 let loading = ref(true)
@@ -70,9 +71,6 @@ const deletePurchase = async (purchaseId)=>{
       <v-card
         class="mx-auto"
       >
-        <template v-slot:title>
-          Purchase List
-        </template>
 
         <v-card-text class="pt-4">
           <VRow justify="end">
@@ -104,6 +102,9 @@ const deletePurchase = async (purchaseId)=>{
               <RouterLink :to="'/purchase/' + item.purchase_id ">
                 #{{ item.purchase_id }}
               </RouterLink>
+            </template>
+            <template #item.total_amount="{ item }">
+              {{formatCurrency(item.total_amount)}}
             </template>
             <!-- Actions -->
             <template #item.actions="{ item }">

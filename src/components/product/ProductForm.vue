@@ -3,7 +3,6 @@ import {useProductStore} from '@/stores/product';
 import {ref, watch} from 'vue';
 import {positiveNumberValidation, requiredValidator} from "@/utils/validators";
 
-const emit = defineEmits(['closeProductForm'])
 const props = defineProps(['product'])
 const productStore = useProductStore();
 
@@ -29,7 +28,10 @@ watch(
   {immediate: true}
 );
 /* Reset errors if any*/
-onMounted(()=> refForm.value?.resetValidation())
+onMounted(()=> {
+  productStore.errors = {}
+  refForm.value?.resetValidation()
+})
 const saveProduct = () => {
   let status = refForm.value?.validate()
   status.then(x => {
@@ -41,7 +43,6 @@ const saveProduct = () => {
       }
     }
   })
-
 };
 
 </script>

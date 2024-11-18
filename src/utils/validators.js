@@ -4,7 +4,7 @@ import { isEmpty, isEmptyArray, isNullOrUndefined } from './helpers'
 export const requiredValidator = value => {
   if (isNullOrUndefined(value) || isEmptyArray(value) || value === false)
     return 'This field is required'
-  
+
   return !!String(value).trim().length || 'This field is required'
 }
 
@@ -15,7 +15,7 @@ export const emailValidator = value => {
   const re = /^(?:[^<>()[\]\\.,;:\s@"]+(?:\.[^<>()[\]\\.,;:\s@"]+)*|".+")@(?:\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\]|(?:[a-z\-\d]+\.)+[a-z]{2,})$/i
   if (Array.isArray(value))
     return value.every(val => re.test(String(val))) || 'The Email field must be a valid email'
-  
+
   return re.test(String(value)) || 'The Email field must be a valid email'
 }
 
@@ -23,7 +23,7 @@ export const emailValidator = value => {
 export const passwordValidator = password => {
   const regExp = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*()]).{8,}/
   const validPassword = regExp.test(password)
-  
+
   return validPassword || 'Field must contain at least one uppercase, lowercase, special character and digit with min 8 chars'
 }
 
@@ -33,7 +33,7 @@ export const confirmedValidator = (value, target) => value === target || 'The Co
 // 👉 Between Validator
 export const betweenValidator = (value, min, max) => {
   const valueAsNumber = Number(value)
-  
+
   return (Number(min) <= valueAsNumber && Number(max) >= valueAsNumber) || `This field must be between ${min} and ${max}`
 }
 
@@ -43,7 +43,7 @@ export const integerValidator = value => {
     return true
   if (Array.isArray(value))
     return value.every(val => /^-?\d+$/.test(String(val))) || 'This field must be an integer'
-  
+
   return /^-?\d+$/.test(String(value)) || 'This field must be an integer'
 }
 
@@ -56,7 +56,7 @@ export const regexValidator = (value, regex) => {
     regeX = new RegExp(regeX)
   if (Array.isArray(value))
     return value.every(val => regexValidator(val, regeX))
-  
+
   return regeX.test(String(value)) || 'The Regex field format is invalid'
 }
 
@@ -64,7 +64,7 @@ export const regexValidator = (value, regex) => {
 export const alphaValidator = value => {
   if (isEmpty(value))
     return true
-  
+
   return /^[A-Z]*$/i.test(String(value)) || 'The Alpha field may only contain alphabetic characters'
 }
 
@@ -73,7 +73,7 @@ export const urlValidator = value => {
   if (isEmpty(value))
     return true
   const re = /^https?:\/\/[^\s$.?#].\S*$/
-  
+
   return re.test(String(value)) || 'URL is invalid'
 }
 
@@ -81,7 +81,7 @@ export const urlValidator = value => {
 export const lengthValidator = (value, length) => {
   if (isEmpty(value))
     return true
-  
+
   return String(value).length === length || `The Min Character field must be at least ${length} characters`
 }
 
@@ -105,7 +105,7 @@ export const alphaDashValidator = value => {
   if (isEmpty(value))
     return true
   const valueAsString = String(value)
-  
+
   return /^[\w-]*$/.test(valueAsString) || 'All Character are not valid'
 }
 

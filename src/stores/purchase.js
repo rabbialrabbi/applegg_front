@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '@/_helper/api'
+import router from "@/router";
 
 export const usePurchaseStore = defineStore('purchase', {
   state: () => ({
@@ -15,26 +16,15 @@ export const usePurchaseStore = defineStore('purchase', {
       this.totalPurchaseItem = purchasesData.meta.total;
     },
     async createPurchase(data) {
+      this.errors = {}
      await api.post('/purchases', data).then(res=>{
        this.getPurchaseList();
+       router.push('/purchase/list')
      }).catch(err=>{
         if(err.response.data.errors){
           this.showFormErrors(err.response.data.errors)
         }
       });
-    },
-    async updatePurchase(id, data) {
-      await api.put(`/purchases/${id}`, data).then(res=>{
-        this.getPurchaseList();
-      }).catch(err=>{
-        if(err.response.data.errors){
-          this.showFormErrors(err.response.data.errors)
-        }
-      });;
-    },
-    async deletePurchase(id) {
-      await api.delete(`/purchases/${id}`);
-      this.getPurchaseList();
     },
     showFormErrors(resErrors){
       for(let key in resErrors){

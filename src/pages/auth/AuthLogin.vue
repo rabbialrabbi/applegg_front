@@ -1,34 +1,44 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-// import Google from '@/assets/images/auth/social-google.svg';
 import { useAuthStore } from '@/stores/auth';
 
-const checkbox = ref(false);
+const authStore = useAuthStore()
 const valid = ref(false);
 const show1 = ref(false);
-//const logform = ref();
-const password = ref('12345678');
-const username = ref('admin@mail.com');
+const formData = ref({
+  email: 'admin@mail.com',
+  password: '12345678',
+  remember_me : null
+});
+
 const passwordRules = ref([
   (v: string) => !!v || 'Password is required',
   (v: string) => (v && v.length <= 10) || 'Password must be less than 10 characters'
 ]);
 const emailRules = ref([(v: string) => !!v || 'E-mail is required', (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid']);
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function validate(values: any, { setErrors }: any) {
-  const authStore = useAuthStore();
-  return authStore.login(username.value, password.value).catch((error) => setErrors({ apiError: error }));
+const refForm = ref()
+function login() {
+  valid.value = true
+  let status = refForm.value?.validate()
+  status.then(x => {
+    if (x.valid) {
+      authStore.login(formData.value);
+    }
+  })
 }
 </script>
 
 <template>
   <h5 class="text-h5 text-center my-4 mb-8">Sign in with Email address</h5>
-  <v-form ref="refForm" @submit.prevent="validate" class="mt-7 loginForm">
+  <v-form
+    ref="refForm"
+    @submit.prevent="login"
+    class="mt-7 loginForm">
     <v-text-field
-      v-model="username"
+      v-model="formData.email"
       :rules="emailRules"
-      label="Email Address / Username"
+      label="Email Address"
       class="mt-4 mb-8"
       required
       density="comfortable"
@@ -37,7 +47,7 @@ function validate(values: any, { setErrors }: any) {
       color="primary"
     ></v-text-field>
     <v-text-field
-      v-model="password"
+      v-model="formData.password"
       :rules="passwordRules"
       label="Password"
       required
@@ -53,8 +63,7 @@ function validate(values: any, { setErrors }: any) {
 
     <div class="d-sm-flex align-center mt-2 mb-7 mb-sm-0">
       <v-checkbox
-        v-model="checkbox"
-        :rules="[(v: any) => !!v || 'You must agree to continue!']"
+        v-model="formData.remember_me"
         label="Remember me?"
         required
         color="primary"
@@ -62,7 +71,7 @@ function validate(values: any, { setErrors }: any) {
         hide-details
       ></v-checkbox>
       <div class="ml-auto">
-        <a href="javascript:void(0)" class="text-primary text-decoration-none">Forgot password?</a>
+<!--        <a href="javascript:void(0)" class="text-primary text-decoration-none">Forgot password?</a>-->
       </div>
     </div>
     <v-btn color="secondary" block class="mt-2" variant="flat" size="large" :disabled="valid" type="submit">
@@ -71,8 +80,8 @@ function validate(values: any, { setErrors }: any) {
 
   </v-form>
   <div class="mt-5 text-right">
-    <v-divider />
-    <v-btn variant="plain" to="/auth/register" class="mt-2 text-capitalize mr-n2">Don't Have an account?</v-btn>
+<!--    <v-divider />-->
+<!--    <v-btn variant="plain" to="/auth/register" class="mt-2 text-capitalize mr-n2">Don't Have an account?</v-btn>-->
   </div>
 </template>
 <style lang="scss">
