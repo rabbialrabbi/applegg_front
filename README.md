@@ -1,79 +1,35 @@
-# Vuetify (Default)
+<h1 align="center">Super POS</h1>
 
-This is the official scaffolding tool for Vuetify, designed to give you a head start in building your new Vuetify application. It sets up a base template with all the necessary configurations and standard directory structure, enabling you to begin development without the hassle of setting up the project from scratch.
+Super POS is designed to offer businesses a simple yet effective solution for managing product, supplier relationships, and purchase orders with a streamlined approach. Focusing on three core modules — Product, Supplier, and Purchase — it provides essential functionalities to manage products, suppliers, and purchase orders, making it ideal for businesses seeking an efficient point-of-sale (POS) system without unnecessary complexities.
 
-## ❗️ Important Links
+## Project Architecture
+This project is a web application that leverages Vue.js for the frontend and Laravel for the backend API. Vue.js provides a dynamic, interactive user experience with a modern, single-page application (SPA) structure, while Laravel powers the backend to handle server-side operations, including data management, authentication, and API services. This structure enables a clear separation between the frontend and backend, making the project scalable, maintainable, and efficient.
 
-- 📄 [Docs](https://vuetifyjs.com/)
-- 🚨 [Issues](https://issues.vuetifyjs.com/)
-- 🏬 [Store](https://store.vuetifyjs.com/)
-- 🎮 [Playground](https://play.vuetifyjs.com/)
-- 💬 [Discord](https://community.vuetifyjs.com)
+## Technology Stack
+- Frontend: Vue.js (Vue CLI)
+- Backend: Laravel (PHP)
+- Database: MySQL
+- API Communication: Axios
 
-## 💿 Install
+## Project Setup
 
-Set up your project using your preferred package manager. Use the corresponding command to install the dependencies:
+### Backend end setup (Development)
+- [ Clone laravel Project](https://github.com/rabbialrabbi/applegg_back)
+- Install Dependency by running command composer install in project directory (PHP and [Composer](https://getcomposer.org/download/) required)
+- Start MySql Server
+- Provide necessary info about MySql Server in .env file
+- Run php artisan migrate command for database migration
+- Run php artisan db:seed for seed data (!!! Important as few data like category only available by seeding!!! )
+- Run php artisan server --port=8002 for server (By default front end will call in this port. for custom need to change in frontend .env file)
 
-| Package Manager                                                | Command        |
-|---------------------------------------------------------------|----------------|
-| [yarn](https://yarnpkg.com/getting-started)                   | `yarn install` |
-| [npm](https://docs.npmjs.com/cli/v7/commands/npm-install)     | `npm install`  |
-| [pnpm](https://pnpm.io/installation)                          | `pnpm install` |
-| [bun](https://bun.sh/#getting-started)                        | `bun install`  |
+### Front end setup (Development)
+- [ Clone vue Project](https://github.com/rabbialrabbi/applegg_front)
+- Install Dependency by running command npm install in project directory (Node.js and npm required)
+- Run npm run dev for dev server
+- Enjoy
 
-After completing the installation, your environment is ready for Vuetify development.
-
-## ✨ Features
-
-- 🖼️ **Optimized Front-End Stack**: Leverage the latest Vue 3 and Vuetify 3 for a modern, reactive UI development experience. [Vue 3](https://v3.vuejs.org/) | [Vuetify 3](https://vuetifyjs.com/en/)
-- 🗃️ **State Management**: Integrated with [Pinia](https://pinia.vuejs.org/), the intuitive, modular state management solution for Vue.
-- 🚦 **Routing and Layouts**: Utilizes Vue Router for SPA navigation and vite-plugin-vue-layouts for organizing Vue file layouts. [Vue Router](https://router.vuejs.org/) | [vite-plugin-vue-layouts](https://github.com/JohnCampionJr/vite-plugin-vue-layouts)
-- ⚡ **Next-Gen Tooling**: Powered by Vite, experience fast cold starts and instant HMR (Hot Module Replacement). [Vite](https://vitejs.dev/)
-- 🧩 **Automated Component Importing**: Streamline your workflow with unplugin-vue-components, automatically importing components as you use them. [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
-
-These features are curated to provide a seamless development experience from setup to deployment, ensuring that your Vuetify application is both powerful and maintainable.
-
-## 💡 Usage
-
-This section covers how to start the development server and build your project for production.
-
-### Starting the Development Server
-
-To start the development server with hot-reload, run the following command. The server will be accessible at [http://localhost:3000](http://localhost:3000):
-
-```bash
-yarn dev
-```
-
-(Repeat for npm, pnpm, and bun with respective commands.)
-
-> Add NODE_OPTIONS='--no-warnings' to suppress the JSON import warnings that happen as part of the Vuetify import mapping. If you are on Node [v21.3.0](https://nodejs.org/en/blog/release/v21.3.0) or higher, you can change this to NODE_OPTIONS='--disable-warning=5401'. If you don't mind the warning, you can remove this from your package.json dev script.
-
-### Building for Production
-
-To build your project for production, use:
-
-```bash
-yarn build
-```
-
-(Repeat for npm, pnpm, and bun with respective commands.)
-
-Once the build process is completed, your application will be ready for deployment in a production environment.
-
-## 💪 Support Vuetify Development
-
-This project is built with [Vuetify](https://vuetifyjs.com/en/), a UI Library with a comprehensive collection of Vue components. Vuetify is an MIT licensed Open Source project that has been made possible due to the generous contributions by our [sponsors and backers](https://vuetifyjs.com/introduction/sponsors-and-backers/). If you are interested in supporting this project, please consider:
-
-- [Requesting Enterprise Support](https://support.vuetifyjs.com/)
-- [Sponsoring John on Github](https://github.com/users/johnleider/sponsorship)
-- [Sponsoring Kael on Github](https://github.com/users/kaelwd/sponsorship)
-- [Supporting the team on Open Collective](https://opencollective.com/vuetify)
-- [Becoming a sponsor on Patreon](https://www.patreon.com/vuetify)
-- [Becoming a subscriber on Tidelift](https://tidelift.com/subscription/npm/vuetify)
-- [Making a one-time donation with Paypal](https://paypal.me/vuetify)
-
-## 📑 License
-[MIT](http://opensource.org/licenses/MIT)
-
-Copyright (c) 2016-present Vuetify, LLC
+## Acknowledgments
+- For Admin Panel [berrydashboard.io](https://berrydashboard.io/vue/free/) UI design has been taken
+- ChatGPT
+- Google
+- Stackoverflow
