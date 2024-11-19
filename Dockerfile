@@ -7,10 +7,10 @@ FROM node:lts-alpine
 WORKDIR /var/www
 
 # copy both 'package.json' and 'package-lock.json' (if available)
-#COPY package*.json ./
+COPY package*.json ./
 
 # install project dependencies
-#RUN npm install
+RUN npm install
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
@@ -19,4 +19,4 @@ RUN chmod -R 777 /var/www
 #RUN npm run build
 
 #EXPOSE 8080
-CMD [ "pnpm","run","dev"]
+CMD [ "npm","run","dev"]

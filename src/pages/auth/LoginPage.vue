@@ -17,7 +17,7 @@ import AuthLogin from './AuthLogin.vue';
                     <!---Left Part Logo -->
                     <v-row>
                       <v-col cols="12" class="text-center">
-                        <Logo />
+                        <img src="@/assets/images/logos/super_pos.webp" width="90px" height="80px" alt="Julia" />
                         <h2 class="text-secondary text-h2 mt-8">Hi, Welcome Back</h2>
                         <h4 class="text-disabled text-h4 mt-3">Enter your credentials to continue</h4>
                       </v-col>

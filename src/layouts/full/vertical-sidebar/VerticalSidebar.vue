@@ -32,7 +32,7 @@ const sidebarMenu = shallowRef(sidebarItems);
           <template v-slot:activator="{ props }">
             <v-btn class="profileBtn text-primary" color="lightprimary" variant="flat" rounded="pill" v-bind="props">
               <v-avatar size="30" class="mr-2 py-2">
-                <img src="@/assets/images/logos/super_pos.svg" width="40px" height="40px" alt="Julia" />
+                <img src="@/assets/images/logos/super_pos.webp" width="40px" height="40px" alt="Julia" />
               </v-avatar>
               <h3>Super POS</h3>
             </v-btn>
